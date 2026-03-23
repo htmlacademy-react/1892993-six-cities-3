@@ -2,4 +2,11 @@ const Setting = {
   rentalOffers: 5
 };
 
-export {Setting};
+enum AppRoute {
+  Favorites = '/favorites',
+  Offer = '/offer',
+  Login = '/login',
+  Root = '/',
+}
+
+export {Setting, AppRoute};
