@@ -4,9 +4,15 @@ const Setting = {
 
 enum AppRoute {
   Favorites = '/favorites',
-  Offer = '/offer',
+  Offer = '/offer/:id',
   Login = '/login',
   Root = '/',
 }
 
-export {Setting, AppRoute};
+enum AuthorizationStatus {
+  Auth = 'AUTH',
+  NoAuth = 'NO_AUTH',
+  Unknown = 'UNKNOWN',
+}
+
+export {Setting, AppRoute, AuthorizationStatus};
