@@ -1,6 +1,6 @@
-const Setting = {
-  rentalOffers: 5
-};
+const percent = '%';
+const factor = 20;
+
 
 enum AppRoute {
   Favorites = '/favorites',
@@ -14,5 +14,13 @@ enum AuthorizationStatus {
   NoAuth = 'NO_AUTH',
   Unknown = 'UNKNOWN',
 }
+const CITIES = [
+  'Paris',
+  'Cologne',
+  'Brussels',
+  'Amsterdam',
+  'Hamburg',
+  'Dusseldorf',
+] as const;
 
-export {Setting, AppRoute, AuthorizationStatus};
+export {AppRoute, AuthorizationStatus, factor, percent, CITIES};

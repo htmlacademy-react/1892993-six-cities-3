@@ -1,12 +1,16 @@
-import ProposalCard from '../../components/proposal-card/proposal-card';
+import { useState } from 'react';
 import Logo from '../../components/logo/logo';
 import { Helmet } from 'react-helmet-async';
+import { Offer } from '../../types/offer';
+import OffersList from '../../components/offers-list/offers-list';
 
 type MainPageScreenProps = {
-  rentalOffers: number;
+  offers: Offer[];
 }
 
-function MainPage ({rentalOffers}: MainPageScreenProps): JSX.Element {
+function MainPage ({offers}: MainPageScreenProps): JSX.Element {
+  const [activeOfferId, setActiveOfferId] = useState<string | null>(null);
+
   return(
     <div className="page page--gray page--main">
       <Helmet>
@@ -78,7 +82,7 @@ function MainPage ({rentalOffers}: MainPageScreenProps): JSX.Element {
           <div className="cities__places-container container">
             <section className="cities__places places">
               <h2 className="visually-hidden">Places</h2>
-              <b className="places__found">{rentalOffers} places to stay in Amsterdam</b>
+              <b className="places__found">{offers.length} places to stay in Amsterdam</b>
               <form className="places__sorting" action="#" method="get">
                 <span className="places__sorting-caption">Sort by</span>
                 <span className="places__sorting-type" tabIndex={0}>
@@ -95,11 +99,11 @@ function MainPage ({rentalOffers}: MainPageScreenProps): JSX.Element {
                 </ul>
               </form>
               <div className="cities__places-list places__list tabs__content">
-                <ProposalCard></ProposalCard>
-                <ProposalCard></ProposalCard>
-                <ProposalCard></ProposalCard>
-                <ProposalCard></ProposalCard>
-                <ProposalCard></ProposalCard>
+                <OffersList
+                  offers={offers}
+                  cardClassName="cities"
+                  handleHover={setActiveOfferId}
+                />
               </div>
             </section>
             <div className="cities__right-section">
