@@ -40,7 +40,7 @@ function App ({offers, offersId, reviews}: AppScreenProps): JSX.Element {
           />
           <Route
             path={AppRoute.Offer}
-            element={<OfferPage offersId={offersId} reviews={reviews} authorizationStatus={AuthorizationStatus.Auth}/>}
+            element={<OfferPage offers={offers} offersId={offersId} reviews={reviews} authorizationStatus={AuthorizationStatus.Auth}/>}
           />
           <Route
             path='/*'

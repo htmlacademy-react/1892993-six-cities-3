@@ -117,7 +117,7 @@ function MainPage ({offers}: MainPageScreenProps): JSX.Element {
               </div>
             </section>
             <div className="cities__right-section">
-              <Map offers={offers} selectedOffer={selectedOffer} city={CITIES_LIST[0]}/>
+              <Map mapClassName={'cities__map'} offers={offers} selectedOffer={selectedOffer} city={CITIES_LIST[0]}/>
             </div>
           </div>
         </div>
