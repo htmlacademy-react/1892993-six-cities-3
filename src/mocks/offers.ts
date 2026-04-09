@@ -15,8 +15,8 @@ export const offers: Offer[] = [
       }
     },
     location: {
-      latitude: 52.35514938496378,
-      longitude: 4.673877537499948,
+      latitude: 52.3909553943508,
+      longitude: 4.85309666406198,
       zoom: 8
     },
     isFavorite: false,
@@ -30,7 +30,7 @@ export const offers: Offer[] = [
     type: 'house',
     price: 140,
     city: {
-      name: 'Brussels',
+      name: 'Amsterdam',
       location: {
         latitude: 52.35514938496378,
         longitude: 4.673877537499948,
@@ -38,8 +38,8 @@ export const offers: Offer[] = [
       }
     },
     location: {
-      latitude: 52.35514938496378,
-      longitude: 4.673877537499948,
+      latitude: 52.3609553943508,
+      longitude: 4.85309666406198,
       zoom: 8
     },
     isFavorite: false,
@@ -53,7 +53,7 @@ export const offers: Offer[] = [
     type: 'hotel',
     price: 120,
     city: {
-      name: 'Dusseldorf',
+      name: 'Amsterdam',
       location: {
         latitude: 52.35514938496378,
         longitude: 4.673877537499948,
@@ -61,8 +61,8 @@ export const offers: Offer[] = [
       }
     },
     location: {
-      latitude: 52.35514938496378,
-      longitude: 4.673877537499948,
+      latitude: 52.3909553943508,
+      longitude: 4.929309666406198,
       zoom: 8
     },
     isFavorite: false,
@@ -76,7 +76,7 @@ export const offers: Offer[] = [
     type: 'apartment',
     price: 170,
     city: {
-      name: 'Hamburg',
+      name: 'Amsterdam',
       location: {
         latitude: 52.35514938496378,
         longitude: 4.673877537499948,
@@ -84,8 +84,8 @@ export const offers: Offer[] = [
       }
     },
     location: {
-      latitude: 52.35514938496378,
-      longitude: 4.673877537499948,
+      latitude: 52.3809553943508,
+      longitude: 4.939309666406198,
       zoom: 8
     },
     isFavorite: true,
@@ -110,8 +110,8 @@ export const offersId: OfferId[] = [
       }
     },
     location: {
-      latitude: 52.35514938496378,
-      longitude: 4.673877537499948,
+      latitude: 52.3909553943508,
+      longitude: 4.85309666406198,
       zoom: 8
     },
     isFavorite: false,
@@ -147,7 +147,7 @@ export const offersId: OfferId[] = [
     type: 'house',
     price: 140,
     city: {
-      name: 'Brussels',
+      name: 'Amsterdam',
       location: {
         latitude: 52.35514938496378,
         longitude: 4.673877537499948,
@@ -155,8 +155,8 @@ export const offersId: OfferId[] = [
       }
     },
     location: {
-      latitude: 52.35514938496378,
-      longitude: 4.673877537499948,
+      latitude: 52.3609553943508,
+      longitude: 4.85309666406198,
       zoom: 8
     },
     isFavorite: false,
@@ -187,7 +187,7 @@ export const offersId: OfferId[] = [
     type: 'hotel',
     price: 120,
     city: {
-      name: 'Dusseldorf',
+      name: 'Amsterdam',
       location: {
         latitude: 52.35514938496378,
         longitude: 4.673877537499948,
@@ -195,8 +195,8 @@ export const offersId: OfferId[] = [
       }
     },
     location: {
-      latitude: 52.35514938496378,
-      longitude: 4.673877537499948,
+      latitude: 52.3909553943508,
+      longitude: 4.929309666406198,
       zoom: 8
     },
     isFavorite: false,
@@ -224,7 +224,7 @@ export const offersId: OfferId[] = [
     type: 'apartment',
     price: 170,
     city: {
-      name: 'Hamburg',
+      name: 'Amsterdam',
       location: {
         latitude: 52.35514938496378,
         longitude: 4.673877537499948,
@@ -232,8 +232,8 @@ export const offersId: OfferId[] = [
       }
     },
     location: {
-      latitude: 52.35514938496378,
-      longitude: 4.673877537499948,
+      latitude: 52.3809553943508,
+      longitude: 4.939309666406198,
       zoom: 8
     },
     isFavorite: true,

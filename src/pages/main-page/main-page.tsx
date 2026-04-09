@@ -3,13 +3,23 @@ import Logo from '../../components/logo/logo';
 import { Helmet } from 'react-helmet-async';
 import { Offer } from '../../types/offer';
 import OffersList from '../../components/offers-list/offers-list';
+import Map from '../../components/map/map';
+import { CITIES_LIST } from '../../const';
 
 type MainPageScreenProps = {
   offers: Offer[];
 }
 
 function MainPage ({offers}: MainPageScreenProps): JSX.Element {
-  const [activeOfferId, setActiveOfferId] = useState<string | null>(null);
+  const [selectedOffer, setSelectedOffer] = useState<Offer | undefined>(
+    undefined
+  );
+  const handleListItemHover = (id: string | null) => {
+    const currentOffer = offers.find((offer) => offer.id === id);
+
+    setSelectedOffer(currentOffer);
+  };
+
 
   return(
     <div className="page page--gray page--main">
@@ -102,12 +112,12 @@ function MainPage ({offers}: MainPageScreenProps): JSX.Element {
                 <OffersList
                   offers={offers}
                   cardClassName="cities"
-                  handleHover={setActiveOfferId}
+                  onListItemHover={handleListItemHover}
                 />
               </div>
             </section>
             <div className="cities__right-section">
-              <section className="cities__map map" />
+              <Map offers={offers} selectedOffer={selectedOffer} city={CITIES_LIST[0]}/>
             </div>
           </div>
         </div>
