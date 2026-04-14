@@ -2,14 +2,14 @@ import {useRef, useEffect} from 'react';
 import {Icon, Marker, layerGroup} from 'leaflet';
 import useMap from '../../hooks/use-map';
 import { Offer } from '../../types/offer';
-import { City } from '../../types/city';
-import {MARKERS} from '../../const';
+import {MARKERS, CITIES} from '../../const';
 import 'leaflet/dist/leaflet.css';
+import L from 'leaflet';
 
 type MapProps = {
   offers: Offer[];
   selectedOffer: Offer | undefined;
-  city: City;
+  currentCity: string;
   mapClassName: string;
 };
 
@@ -26,12 +26,21 @@ const currentCustomIcon = new Icon({
 });
 
 function Map(props: MapProps): JSX.Element {
-  const {offers, selectedOffer, city, mapClassName} = props;
+  const {offers, selectedOffer, currentCity, mapClassName} = props;
+  const cityArr = CITIES.filter((item) => item.name === currentCity);
+  const city = cityArr[0];
+
   const mapRef = useRef(null);
   const map = useMap(mapRef, city);
 
   useEffect(() => {
     if (map) {
+      map.eachLayer((layer) => {
+        if (layer instanceof L.Marker) {
+          map.removeLayer(layer);
+        }
+      });
+      map.setView([city.location.latitude, city.location.longitude], city.location.zoom);
       const markerLayer = layerGroup().addTo(map);
       offers.forEach((offer) => {
         const marker = new Marker({
@@ -52,7 +61,7 @@ function Map(props: MapProps): JSX.Element {
         map.removeLayer(markerLayer);
       };
     }
-  }, [map, offers, selectedOffer]);
+  }, [map, offers, selectedOffer, city.location.latitude, city.location.longitude, city.location.zoom]);
 
   return <section className={`${mapClassName} map`} ref={mapRef}></section>;
 }

@@ -16,24 +16,8 @@ enum AuthorizationStatus {
   NoAuth = 'NO_AUTH',
   Unknown = 'UNKNOWN',
 }
-const CITIES = [
-  'Paris',
-  'Cologne',
-  'Brussels',
-  'Amsterdam',
-  'Hamburg',
-  'Dusseldorf',
-] as const;
 
-const CITIES_LIST: City[] = [
-  {
-    name: 'Amsterdam',
-    location: {
-      latitude: 52.37454,
-      longitude: 4.897976,
-      zoom: 10,
-    },
-  },
+const CITIES: City[] = [
   {
     name: 'Paris',
     location: {
@@ -59,6 +43,14 @@ const CITIES_LIST: City[] = [
     },
   },
   {
+    name: 'Amsterdam',
+    location: {
+      latitude: 52.37454,
+      longitude: 4.897976,
+      zoom: 10,
+    },
+  },
+  {
     name: 'Hamburg',
     location: {
       latitude: 53.550341,
@@ -76,9 +68,11 @@ const CITIES_LIST: City[] = [
   },
 ];
 
+export type CityName = (typeof CITIES)[number]['name'];
+
 const MARKERS = {
   URL_MARKER_DEFAULT: '/markup/img/pin.svg',
   URL_MARKER_ACTIVE: '/markup/img/pin-active.svg',
 } as const;
 
-export {AppRoute, AuthorizationStatus, factor, percent, CITIES, MARKERS, CITIES_LIST};
+export {AppRoute, AuthorizationStatus, factor, percent, CITIES, MARKERS};

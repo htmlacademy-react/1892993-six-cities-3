@@ -1,25 +1,20 @@
 import { useParams } from 'react-router-dom';
 import Logo from '../../components/logo/logo';
 import { Helmet } from 'react-helmet-async';
-import { OfferId, Offer } from '../../types/offer';
 import NotFoundPage from '../not-found-page/not-found-page';
 import Gallery from '../../components/gallery/gallery';
 import Reviews from '../../components/reviews/reviews';
 import { getRating } from '../../utils/utils';
-import { Review } from '../../types/review';
 import { AuthorizationStatus } from '../../const';
 import OffersList from '../../components/offers-list/offers-list';
 import Map from '../../components/map/map';
 
 
 type OfferPageScreenProps = {
-  offers: Offer[];
-  offersId: OfferId[];
-  reviews: Review[];
   authorizationStatus: AuthorizationStatus;
 }
 
-function OfferPage ({offers, offersId, reviews, authorizationStatus}: OfferPageScreenProps): JSX.Element {
+function OfferPage ({authorizationStatus}: OfferPageScreenProps): JSX.Element {
   const { id: offerId = '' } = useParams();
   const currentOffer = offersId.find((el) => (el.id === offerId));
   if (!currentOffer) {

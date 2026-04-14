@@ -1,15 +1,11 @@
 import { Link } from 'react-router-dom';
 import Logo from '../../components/logo/logo';
 import { Helmet } from 'react-helmet-async';
-import { Offer } from '../../types/offer';
 import FavoritesEmpty from '../../components/favorites-empty/favorites-empty';
 import FavoritesMain from '../../components/favorites-main/favorites-main';
 
-type FavoritesPageProps = {
-  offers: Offer[];
-}
 
-function FavoritesPage ({offers}: FavoritesPageProps): JSX.Element {
+function FavoritesPage (): JSX.Element {
   const isEmpty = offers.length === 0;
   const favoriteOffers = offers.filter((offer) => offer.isFavorite);
 
