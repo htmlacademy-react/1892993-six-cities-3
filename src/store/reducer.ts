@@ -1,4 +1,5 @@
-import { createAction, createReducer } from '@reduxjs/toolkit';
+import { createReducer } from '@reduxjs/toolkit';
+import { setCity } from './action';
 
 import type { Offer } from '../types/offer';
 import type { CityName } from '../const';
@@ -16,13 +17,11 @@ const initialState: OffersState = {
   offers,
 };
 
-const setCity = createAction<CityName>('offers/setCity');
-
 const reducer = createReducer(initialState, (builder) => {
   builder.addCase(setCity, (state, action) => {
     state.city = action.payload;
   });
 });
 
-export {reducer, setCity};
+export {reducer};
 

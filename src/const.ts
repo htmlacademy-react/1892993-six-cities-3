@@ -75,4 +75,13 @@ const MARKERS = {
   URL_MARKER_ACTIVE: '/markup/img/pin-active.svg',
 } as const;
 
-export {AppRoute, AuthorizationStatus, factor, percent, CITIES, MARKERS};
+const SORT_OPTIONS = ['Popular', 'Price: low to high', 'Price: high to low', 'Top rated first'];
+
+const enum SortOption {
+  Popular = 0,
+  PriceLowToHigh = 1,
+  PriceHighToLow = 2,
+  TopRatedFirst = 3
+}
+
+export {AppRoute, AuthorizationStatus, factor, percent, CITIES, MARKERS, SORT_OPTIONS, SortOption};
