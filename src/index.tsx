@@ -4,7 +4,7 @@ import App from './components/app/app';
 import { Provider } from 'react-redux';
 import { store } from './store';
 
-import { offers, offersId } from './mocks/offers';
+import { offersId } from './mocks/offers';
 import { reviews } from './mocks/reviews';
 
 
@@ -16,7 +16,6 @@ root.render(
   <React.StrictMode>
     <Provider store={store}>
       <App
-        offers = {offers}
         offersId = {offersId}
         reviews = {reviews}
       />

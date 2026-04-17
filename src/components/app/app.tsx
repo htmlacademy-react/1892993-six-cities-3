@@ -7,18 +7,20 @@ import LoginPage from '../../pages/login-page/login-page';
 import NotFoundPage from '../../pages/not-found-page/not-found-page';
 import { AppRoute, AuthorizationStatus } from '../../const';
 import PrivateRoute from '../private-route/private-route';
+import { useAppSelector } from '../../hooks/store';
 
-import { Offer, OfferId } from '../../types/offer';
+import { OfferId } from '../../types/offer';
 import { Review } from '../../types/review';
 
 type AppScreenProps = {
-  offers: Offer[];
   offersId: OfferId[];
   reviews: Review[];
 }
 
 
-function App ({offers, offersId, reviews}: AppScreenProps): JSX.Element {
+function App ({offersId, reviews}: AppScreenProps): JSX.Element {
+  const stateOffers = useAppSelector((state) => state.offers);
+
   return (
     <HelmetProvider>
       <BrowserRouter>
@@ -42,7 +44,7 @@ function App ({offers, offersId, reviews}: AppScreenProps): JSX.Element {
           />
           <Route
             path={AppRoute.Offer}
-            element={<OfferPage offers={offers} offersId={offersId} reviews={reviews} authorizationStatus={AuthorizationStatus.Auth}/>}
+            element={<OfferPage offers={stateOffers} offersId={offersId} reviews={reviews} authorizationStatus={AuthorizationStatus.Auth}/>}
           />
           <Route
             path='/*'
