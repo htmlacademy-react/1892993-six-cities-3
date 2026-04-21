@@ -1,21 +1,20 @@
-import { Review } from '../../types/review';
-import { AuthorizationStatus } from '../../const';
-import ReviewList from '../review-list/review-list';
-import ReviewForm from '../review-form/review-form';
+import Review from '../review/review';
+import { commentType } from '../review/review';
+import dayjs from 'dayjs';
 
-type ReviewsProps = {
-  reviews: Review[];
-  authorizationStatus: AuthorizationStatus;
-}
 
-function Reviews({reviews, authorizationStatus}: ReviewsProps): JSX.Element {
-  const isAuth = authorizationStatus === AuthorizationStatus.Auth;
-
+type reviewsProps = { comments: commentType[] };
+function Reviews({ comments }: reviewsProps) {
+  const sortedSlicedComments = comments.toSorted((comment1,comment2)=>dayjs(comment2.date).diff(dayjs(comment1.date))).slice(0,10);
   return (
-    <section className="offer__reviews reviews">
-      <h2 className="reviews__title">Reviews · <span className="reviews__amount">{reviews.length}</span></h2>
-      <ReviewList reviews={reviews}/>
-      {isAuth && <ReviewForm />}
+    <section>
+      <h2 className="reviews__title">
+        Reviews · <span className="reviews__amount">{comments.length}</span>
+      </h2>
+      {!sortedSlicedComments.length ||
+        <ul className="reviews__list">
+          {sortedSlicedComments.map((comment) => (<Review comment={comment} key={comment.id} />))}
+        </ul>}
     </section>
   );
 }

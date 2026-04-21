@@ -1,121 +1,36 @@
-import { useState } from 'react';
-import Logo from '../../components/logo/logo';
-import { Helmet } from 'react-helmet-async';
-import { Offer } from '../../types/offer';
-import OffersList from '../../components/offers-list/offers-list';
-import Map from '../../components/map/map';
-import { useAppDispatch, useAppSelector } from '../../hooks/store';
-import { setCity } from '../../store/action';
-import Sort from '../../components/sort/sort';
-import { SortOption } from '../../const';
+import Header from '../../components/header/header';
+import LocationsList from '../../components/locations-list/locations-list';
+import CitiesContainer from '../../components/cities-container/cities-container';
+import MainEmpty from '../../components/main-empty/main-empty';
+import { useAppDispatch, useAppSelector } from '../../hooks';
+import { State } from '../../store/index';
+import { changeCity } from '../../store/slice';
+import ErrorMessage from '../../components/error-message/error-message';
 
 
-import { AppRoute, CITIES } from '../../const';
-import { Link } from 'react-router-dom';
+type mainPageProps = {
+  isSignedIn: string;
+}
 
-
-function MainPage (): JSX.Element {
-  const offers = useAppSelector((state) => state.offers);
-  const currentCity = useAppSelector((state) => state.city);
+function MainPage({ isSignedIn }: mainPageProps): JSX.Element {
   const dispatch = useAppDispatch();
-
-  const currentOffers = offers.filter((offer) => offer.city.name === currentCity);
-  const isEmpty = currentOffers.length === 0;
-
-  const [selectedOffer, setSelectedOffer] = useState<Offer | undefined>(
-    undefined
-  );
-  const [activeSort, setActiveSort] = useState(SortOption.Popular);
-
-  const handleListItemHover = (id: string | null) => {
-    const currentOffer = offers.find((offer) => offer.id === id);
-
-    setSelectedOffer(currentOffer);
-  };
-
-  let sortedPffers = currentOffers;
-
-  if (activeSort === SortOption.PriceLowToHigh) {
-    sortedPffers = currentOffers.toSorted((a, b) => a.price - b.price);
-  }
-
-  if (activeSort === SortOption.PriceHighToLow) {
-    sortedPffers = currentOffers.toSorted((a, b) => b.price - a.price);
-  }
-
-  if (activeSort === SortOption.TopRatedFirst) {
-    sortedPffers = currentOffers.toSorted((a, b) => b.rating - a.rating);
-  }
-
-
-  return(
-    <div className="page page--gray page--main">
-      <Helmet>
-        <title>6 городов</title>
-      </Helmet>
-      <header className="header">
-        <div className="container">
-          <div className="header__wrapper">
-            <Logo/>
-            <nav className="header__nav">
-              <ul className="header__nav-list">
-                <li className="header__nav-item user">
-                  <a className="header__nav-link header__nav-link--profile" href="#">
-                    <div className="header__avatar-wrapper user__avatar-wrapper">
-                    </div>
-                    <span className="header__user-name user__name">Oliver.conner@gmail.com</span>
-                    <span className="header__favorite-count">3</span>
-                  </a>
-                </li>
-                <li className="header__nav-item">
-                  <a className="header__nav-link" href="#">
-                    <span className="header__signout">Sign out</span>
-                  </a>
-                </li>
-              </ul>
-            </nav>
-          </div>
-        </div>
-      </header>
-      <main className={`page__main page__main--index ${isEmpty ? 'page__main--index-empty' : ''}`}>
+  const currentCity = useAppSelector((state: State) => state.city);
+  const offers = useAppSelector((state: State) => state.offers);
+  const cityOffers = offers?.filter((offer) => (offer.city.name === currentCity));
+  const emptyClass = cityOffers.length === 0 ? ' page__main--index-empty' : '';
+  const error = useAppSelector((state: State) => state.error);
+  return (
+    <div className='page page--gray page--main'>
+      <Header isSignedIn={isSignedIn} />
+      <main className={`page__main page__main--index${emptyClass}`}>
         <h1 className="visually-hidden">Cities</h1>
         <div className="tabs">
-          <section className="locations container">
-            <ul className="locations__list tabs__list">
-              {CITIES.map((city) => (
-                <li className="locations__item" key={city.name}>
-                  <Link className={`locations__item-link tabs__item ${currentCity === city.name ? 'tabs__item--active' : ''}`}
-                    onClick={() => {
-                      dispatch(setCity(city.name));
-                    }}
-                    to={AppRoute.Root}
-                  >
-                    <span>{city.name}</span>
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </section>
+          <LocationsList currentCity={currentCity} onCityClick={(city) => dispatch(changeCity(city))} />
         </div>
-        <div className="cities">
-          <div className="cities__places-container container">
-            <section className="cities__places places">
-              <h2 className="visually-hidden">Places</h2>
-              <b className="places__found">{currentOffers.length} place{currentOffers.length > 1 && 's'} to stay in {currentCity}</b>
-              <Sort current={activeSort} setter={setActiveSort}/>
-              <div className="cities__places-list places__list tabs__content">
-                <OffersList
-                  offers={sortedPffers}
-                  cardClassName="cities"
-                  onListItemHover={handleListItemHover}
-                />
-              </div>
-            </section>
-            <div className="cities__right-section">
-              <Map mapClassName={'cities__map'} offers={currentOffers} selectedOffer={selectedOffer} currentCity={currentCity}/>
-            </div>
-          </div>
-        </div>
+        {cityOffers.length > 0
+          ? <CitiesContainer offers={cityOffers} currentCity={currentCity} />
+          : <MainEmpty currentCity={currentCity} />}
+        {error ? <ErrorMessage error={error} /> : ''}
       </main>
     </div>
   );

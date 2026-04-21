@@ -1,26 +1,28 @@
-import {Link} from 'react-router-dom';
-import { Helmet } from 'react-helmet-async';
-
-const divStyle = {
-  display: 'flex',
-  flexDirection: 'column' as const,
-  justifyContent: 'center',
-  alignItems: 'center',
-  marginTop: '30px',
-};
+import { Link } from 'react-router-dom';
 
 function NotFoundPage(): JSX.Element {
   return (
-    <div style={divStyle}>
-      <Helmet>
-        <title>404</title>
-      </Helmet>
-      <span>404</span>
-      <p>Страница не найдена</p>
-      <Link to="/">
-        Вернуться на главную страницу
-      </Link>
-    </div>
+    <header className="header">
+      <div className="container">
+        <div className="header__wrapper">
+          <div className="header__left">
+            <Link to="/" className="header__logo-link header__logo-link--active">
+              <img
+                className="header__logo"
+                src="img/logo.svg"
+                alt="6 cities logo"
+                width={81}
+                height={41}
+              />
+            </Link>
+          </div>
+        </div>
+      </div>
+      <main className="page__main page__main--index" style={{ textAlign: 'center' }}>
+        <h3>404 Not Found</h3>
+        <Link to="/" style={{ textDecoration: 'underline'}}> Вернуться на главную страницу</Link>
+      </main>
+    </header>
   );
 }
 
