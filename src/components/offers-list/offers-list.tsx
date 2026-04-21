@@ -1,25 +1,21 @@
-import ProposalCard from '../proposal-card/proposal-card';
-import {Offer} from '../../types/offer';
+import { mainOfferType } from '../../pages/main-page/main-offer-type';
+import CitiesCard from '../cities-card/cities-card';
+import { memo } from 'react';
 
-type OffersListProps = {
-  offers: Offer[];
-  cardClassName: string;
-  onListItemHover?: (id: string | null) => void;
-};
 
-function OffersList({offers, cardClassName, onListItemHover}: OffersListProps): JSX.Element {
-  return (
-    <>
-      {offers.map((offer) => (
-        <ProposalCard
-          key={offer.id}
-          offer={offer}
-          cardClassName={cardClassName}
-          handleHover={onListItemHover}
-        />
-      ))}
-    </>
-  );
+type offersListProps = {
+  offers: mainOfferType[];
+  page?: string;
+  handleHover?: (offer?: string) => void;
 }
+
+
+const OffersListComponent = ({ offers, handleHover, page }: offersListProps): JSX.Element =>(
+  <>
+    {offers.map((offer) => <CitiesCard handleHover={handleHover} key={offer.id} offer={offer} page={page} />)}
+  </>
+);
+
+const OffersList = memo(OffersListComponent);
 
 export default OffersList;

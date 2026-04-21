@@ -1,58 +1,60 @@
-import {Route, BrowserRouter, Routes} from 'react-router-dom';
-import {HelmetProvider} from 'react-helmet-async';
 import MainPage from '../../pages/main-page/main-page';
 import FavoritesPage from '../../pages/favorites-page/favorites-page';
-import OfferPage from '../../pages/offer-page/offer-page';
 import LoginPage from '../../pages/login-page/login-page';
+import OfferPage from '../../pages/offer-page/offer-page';
 import NotFoundPage from '../../pages/not-found-page/not-found-page';
-import { AppRoute, AuthorizationStatus } from '../../const';
+import ScrollToTop from '../scroll-to-top/scroll-to-top';
+import Spinner from '../spinner/spinner';
+import { AppRoute } from '../../consts';
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import PrivateRoute from '../private-route/private-route';
-import { useAppSelector } from '../../hooks/store';
-
-import { OfferId } from '../../types/offer';
-import { Review } from '../../types/review';
-
-type AppScreenProps = {
-  offersId: OfferId[];
-  reviews: Review[];
-}
+import { useAppSelector } from '../../hooks';
 
 
-function App ({offersId, reviews}: AppScreenProps): JSX.Element {
-  const stateOffers = useAppSelector((state) => state.offers);
+function App(): JSX.Element {
+  const isOffersDataLoading = useAppSelector((state) => state.isOffersDataLoading);
+  const stateAuthorizationStatus = useAppSelector((state) => state.authorizationStatus);
+
+  if (isOffersDataLoading === true) {
+    return (
+      <Spinner />
+    );
+  }
 
   return (
-    <HelmetProvider>
-      <BrowserRouter>
-        <Routes>
-          <Route
-            index
-            path={AppRoute.Root}
-            element={<MainPage/>}
-          />
-          <Route
-            path={AppRoute.Login}
-            element={<LoginPage/>}
-          />
-          <Route
-            path={AppRoute.Favorites}
-            element={
-              <PrivateRoute authorizationStatus={AuthorizationStatus.Auth}>
-                <FavoritesPage/>
-              </PrivateRoute>
-            }
-          />
-          <Route
-            path={AppRoute.Offer}
-            element={<OfferPage offers={stateOffers} offersId={offersId} reviews={reviews} authorizationStatus={AuthorizationStatus.Auth}/>}
-          />
-          <Route
-            path='/*'
-            element={<NotFoundPage/>}
-          />
-        </Routes>
-      </BrowserRouter>
-    </HelmetProvider>
+    <BrowserRouter>
+      <ScrollToTop />
+      <Routes>
+        <Route
+          path={AppRoute.Main}
+          element={<MainPage isSignedIn={stateAuthorizationStatus} />}
+        />
+        <Route
+          path={AppRoute.Favorite}
+          element={
+            <PrivateRoute authorizationStatus={stateAuthorizationStatus}>
+              <FavoritesPage isSignedIn={stateAuthorizationStatus} />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path={AppRoute.Login}
+          element={
+            <PrivateRoute authorizationStatus={stateAuthorizationStatus} isLoginPage>
+              <LoginPage />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path={`${AppRoute.Offer}/:id`}
+          element={<OfferPage isSignedIn={stateAuthorizationStatus} />}
+        />
+        <Route
+          path='*'
+          element={<NotFoundPage />}
+        />
+      </Routes>
+    </BrowserRouter>
   );
 }
 

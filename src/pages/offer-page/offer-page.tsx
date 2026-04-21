@@ -1,35 +1,46 @@
-import { useParams } from 'react-router-dom';
-import Logo from '../../components/logo/logo';
-import { Helmet } from 'react-helmet-async';
-import { OfferId, Offer } from '../../types/offer';
-import NotFoundPage from '../not-found-page/not-found-page';
-import Gallery from '../../components/gallery/gallery';
-import Reviews from '../../components/reviews/reviews';
-import { getRating } from '../../utils/utils';
-import { Review } from '../../types/review';
-import { AuthorizationStatus } from '../../const';
+import Header from '../../components/header/header';
 import OffersList from '../../components/offers-list/offers-list';
 import Map from '../../components/map/map';
+import Form from '../../components/form/form';
+import Reviews from '../../components/reviews/reviews';
+import { useParams } from 'react-router-dom';
+import { useEffect } from 'react';
+import NotFoundPage from '../not-found-page/not-found-page';
+import { NEAR_PLACES_MAX_LENGTH } from '../../consts';
+import { CitiesCardClass, AuthorizationStatus } from '../../consts';
+import { fetchNearbyOffersAction, fetchCurrentOfferAction, fetchComments, toggleFavoritesAction } from '../../store/api-actions';
+import { useAppDispatch, useAppSelector } from '../../hooks';
+import Spinner from '../../components/spinner/spinner';
 
-
-type OfferPageScreenProps = {
-  offers: Offer[];
-  offersId: OfferId[];
-  reviews: Review[];
-  authorizationStatus: AuthorizationStatus;
+type offerPageProps = {
+  isSignedIn: string;
 }
 
-function OfferPage ({offers, offersId, reviews, authorizationStatus}: OfferPageScreenProps): JSX.Element {
+function OfferPage({ isSignedIn }: offerPageProps) {
   const { id: offerId = '' } = useParams();
-  const currentOffer = offersId.find((el) => (el.id === offerId));
+  const dispatch = useAppDispatch();
+  const currentOffer = useAppSelector((state) => state.currentOffer);
+
+  useEffect(() => {
+    if (offerId) {
+      dispatch(fetchCurrentOfferAction(offerId));
+      dispatch(fetchNearbyOffersAction(offerId));
+      dispatch(fetchComments(offerId));
+    }
+  }, [offerId, dispatch]);
+
+  const nearbyOffers = useAppSelector((state) => state.nearbyOffers).slice(0, NEAR_PLACES_MAX_LENGTH);
+
+  const comments = useAppSelector((state) => state.comments);
+  const isLoading = useAppSelector((state) => state.isLoading);
+
+
+  if (isLoading) {
+    return <Spinner />;
+  }
   if (!currentOffer) {
     return <NotFoundPage />;
   }
-  const nearOffers = offers.filter((offer) => offer.city.name === currentOffer.city.name && offer.id !== currentOffer.id);
-  if (nearOffers.length > 3) {
-    nearOffers.length = 3;
-  }
-
   const {
     bedrooms,
     description,
@@ -45,53 +56,46 @@ function OfferPage ({offers, offersId, reviews, authorizationStatus}: OfferPageS
     type
   } = currentOffer;
 
+  const handleBookmarkClick = () => {
+    if (isSignedIn !== AuthorizationStatus.Auth) {
+      return;
+    }
+
+    dispatch(toggleFavoritesAction({
+      id: offerId,
+      status: isFavorite ? 0 : 1
+    }));
+  };
   return (
     <div className="page">
-      <Helmet>
-        <title>Выбранное место</title>
-      </Helmet>
-      <header className="header">
-        <div className="container">
-          <div className="header__wrapper">
-            <Logo/>
-            <nav className="header__nav">
-              <ul className="header__nav-list">
-                <li className="header__nav-item user">
-                  <a className="header__nav-link header__nav-link--profile" href="#">
-                    <div className="header__avatar-wrapper user__avatar-wrapper">
-                    </div>
-                    <span className="header__user-name user__name">Oliver.conner@gmail.com</span>
-                    <span className="header__favorite-count">3</span>
-                  </a>
-                </li>
-                <li className="header__nav-item">
-                  <a className="header__nav-link" href="#">
-                    <span className="header__signout">Sign out</span>
-                  </a>
-                </li>
-              </ul>
-            </nav>
-          </div>
-        </div>
-      </header>
+      <Header isSignedIn={isSignedIn} />
       <main className="page__main page__main--offer">
         <section className="offer">
-          <Gallery images={images}/>
+          <div className="offer__gallery-container container">
+            <div className="offer__gallery">
+              {images.map((img, i) => (
+                i < 6 &&
+                <div key={img + Math.random()} className="offer__image-wrapper">
+                  <img
+                    className="offer__image"
+                    src={img}
+                    alt="Photo studio"
+                  />
+                </div>
+              ))}
+            </div>
+          </div>
           <div className="offer__container container">
             <div className="offer__wrapper">
-              {isPremium && (
+              {isPremium &&
                 <div className="offer__mark">
                   <span>Premium</span>
-                </div>
-              )}
+                </div>}
               <div className="offer__name-wrapper">
                 <h1 className="offer__name">
                   {title}
                 </h1>
-                <button className={`offer__bookmark-button button
-                ${isFavorite ? 'offer__bookmark-button--active' : ''}`}
-                type="button"
-                >
+                <button className={`offer__bookmark-button button ${isFavorite ? 'offer__bookmark-button--active' : ''}`} type="button" onClick={handleBookmarkClick}>
                   <svg className="offer__bookmark-icon" width={31} height={33}>
                     <use xlinkHref="#icon-bookmark" />
                   </svg>
@@ -100,20 +104,18 @@ function OfferPage ({offers, offersId, reviews, authorizationStatus}: OfferPageS
               </div>
               <div className="offer__rating rating">
                 <div className="offer__stars rating__stars">
-                  <span style={{'width':`${getRating(rating)}`}} />
+                  <span style={{ width: `${Math.round(rating) * 20}%` }} />
                   <span className="visually-hidden">Rating</span>
                 </div>
                 <span className="offer__rating-value rating__value">{rating}</span>
               </div>
               <ul className="offer__features">
-                <li className="offer__feature offer__feature--entire">
-                  {type}
-                </li>
+                <li className="offer__feature offer__feature--entire">{type[0].toUpperCase() + type.slice(1)}</li>
                 <li className="offer__feature offer__feature--bedrooms">
                   {bedrooms} {bedrooms === 1 ? 'Bedroom' : 'Bedrooms'}
                 </li>
                 <li className="offer__feature offer__feature--adults">
-                   Max {maxAdults} {maxAdults === 1 ? 'adult' : 'adults'}
+                  Max {maxAdults} {maxAdults === 1 ? 'Adult' : 'Adults'}
                 </li>
               </ul>
               <div className="offer__price">
@@ -121,31 +123,25 @@ function OfferPage ({offers, offersId, reviews, authorizationStatus}: OfferPageS
                 <span className="offer__price-text">&nbsp;night</span>
               </div>
               <div className="offer__inside">
-                <h2 className="offer__inside-title">What&lsquo;s inside</h2>
+                <h2 className="offer__inside-title">What&apos;s inside</h2>
                 <ul className="offer__inside-list">
-                  {goods.map((item) => (
-                    <li className="offer__inside-item" key={item}>
-                      {item}
-                    </li>
-                  ))}
+                  {goods.map((el) => <li key={el} className="offer__inside-item">{el}</li>)}
                 </ul>
               </div>
               <div className="offer__host">
                 <h2 className="offer__host-title">Meet the host</h2>
                 <div className="offer__host-user user">
-                  <div
-                    className={`offer__avatar-wrapper user__avatar-wrapper ${
-                      host.isPro ? 'offer__avatar-wrapper--pro' : ''
-                    }`}
-                  >
-                    <img className="offer__avatar user__avatar" src={host.avatarUrl} width={74} height={74} alt="Host avatar" />
+                  <div className={`offer__avatar-wrapper offer__avatar-wrapper${host.isPro ? '--pro' : ''} user__avatar-wrapper`}>
+                    <img
+                      className="offer__avatar user__avatar"
+                      src={host.avatarUrl}
+                      width={74}
+                      height={74}
+                      alt="Host avatar"
+                    />
                   </div>
-                  <span className="offer__user-name">
-                    {host.name}
-                  </span>
-                  {host.isPro && (
-                    <span className="offer__user-status">Pro</span>
-                  )}
+                  <span className="offer__user-name">{host.name}</span>
+                  {host.isPro && <span className="offer__user-status">Pro</span>}
                 </div>
                 <div className="offer__description">
                   <p className="offer__text">
@@ -153,20 +149,26 @@ function OfferPage ({offers, offersId, reviews, authorizationStatus}: OfferPageS
                   </p>
                 </div>
               </div>
-              <Reviews reviews={reviews} authorizationStatus={authorizationStatus}/>
+              <section className="offer__reviews reviews">
+                <Reviews comments={comments} />
+                {isSignedIn === AuthorizationStatus.Auth && <Form />}
+              </section>
             </div>
           </div>
-          <Map mapClassName={'offer__map'} offers={nearOffers} selectedOffer={currentOffer} currentCity={currentOffer.city.name}/>
+          <Map className="offer__map map" offers={[...nearbyOffers, currentOffer]} />
         </section>
         <div className="container">
           <section className="near-places places">
-            <h2 className="near-places__title">Other places in the neighbourhood</h2>
-            <div className="near-places__list places__list">
-              <OffersList
-                offers={nearOffers}
-                cardClassName="near-places"
-              />
-            </div>
+            {nearbyOffers.length > 0 ?
+              <>
+                <h2 className="near-places__title">
+                  Other places in the neighbourhood
+                </h2>
+                <div className="near-places__list places__list">
+                  <OffersList offers={nearbyOffers} page={CitiesCardClass.NEAR_PLACES} />
+                </div>
+              </> : ''}
+
           </section>
         </div>
       </main>

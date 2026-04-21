@@ -1,49 +1,49 @@
-import { Link } from 'react-router-dom';
-import Logo from '../../components/logo/logo';
-import { Helmet } from 'react-helmet-async';
+import Footer from '../../components/footer/footer';
+import Header from '../../components/header/header';
 import FavoritesEmpty from '../../components/favorites-empty/favorites-empty';
-import FavoritesMain from '../../components/favorites-main/favorites-main';
+import CitiesCard from '../../components/cities-card/cities-card';
+import { CitiesCardClass } from '../../consts';
+import { useAppSelector } from '../../hooks';
 
+type favoritePageProps = {
+  isSignedIn: string;
+}
 
-function FavoritesPage (): JSX.Element {
-  const isEmpty = offers.length === 0;
-  const favoriteOffers = offers.filter((offer) => offer.isFavorite);
+function FavoritesPage({ isSignedIn }: favoritePageProps): JSX.Element {
+  const favorites = useAppSelector((state) => state.favorites);
+  const uniqueCities = Array.from(new Set(favorites.map((offer) => offer.city.name)));
+  const emptyMainClass = uniqueCities.length > 0 ? ' page__main--favorites-empty' : '';
 
   return (
     <div className="page">
-      <Helmet>
-        <title>Избранное</title>
-      </Helmet>
-      <header className="header">
-        <div className="container">
-          <div className="header__wrapper">
-            <Logo/>
-            <nav className="header__nav">
-              <ul className="header__nav-list">
-                <li className="header__nav-item user">
-                  <a className="header__nav-link header__nav-link--profile" href="#">
-                    <div className="header__avatar-wrapper user__avatar-wrapper">
+      <Header isSignedIn={isSignedIn} />
+      <main className={`page__main page__main--favorites${emptyMainClass}`}>
+        <div className="page__favorites-container container">
+          {uniqueCities.length > 0 ?
+            <section className="favorites">
+              <h1 className="favorites__title">Saved listing</h1>
+              <ul className="favorites__list">
+                {uniqueCities.map((city) => (
+                  <li key={city || null} className="favorites__locations-items">
+                    <div className="favorites__locations locations locations--current">
+                      <div className="locations__item">
+                        <a className="locations__item-link" >
+                          <span>{city}</span>
+                        </a>
+                      </div>
                     </div>
-                    <span className="header__user-name user__name">Oliver.conner@gmail.com</span>
-                    <span className="header__favorite-count">3</span>
-                  </a>
-                </li>
-                <li className="header__nav-item">
-                  <a className="header__nav-link" href="#">
-                    <span className="header__signout">Sign out</span>
-                  </a>
-                </li>
+                    <div className="favorites__places">
+                      {favorites.map((offer) => (offer.city.name === city ?
+                        <CitiesCard key={offer.id} offer={offer} page={CitiesCardClass.FAVORITES} imgWidth={150} imgHeight={110} infoClass='favorites__card-info' />
+                        : null))}
+                    </div>
+                  </li>))}
               </ul>
-            </nav>
-          </div>
+            </section>
+            : <FavoritesEmpty />}
         </div>
-      </header>
-      {isEmpty ? <FavoritesEmpty/> : <FavoritesMain offers={favoriteOffers}/>}
-      <footer className="footer container">
-        <Link className="footer__logo-link" to="/">
-          <img className="footer__logo" src="img/logo.svg" alt="6 cities logo" width={64} height={33} />
-        </Link>
-      </footer>
+      </main>
+      <Footer />
     </div>
   );
 }
