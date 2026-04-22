@@ -7,12 +7,14 @@ import OffersList from '../../components/offers-list/offers-list';
 import SortMenu from '../../components/sort-menu/sort-menu';
 import { SortOption } from '../../consts';
 
+
 type CitiesContainer = {
   offers: mainOfferType[];
   currentCity: Nullable<string>;
+  isSignedIn: string;
 }
 
-function CitiesContainer({ offers, currentCity }: CitiesContainer): JSX.Element {
+function CitiesContainer({ offers, currentCity, isSignedIn}: CitiesContainer): JSX.Element {
   const [selectedCardId, setSelectedCardId] = useState<Nullable<string>>(null);
   const handleHover = useCallback((offer?: string) => {
     setSelectedCardId(offer || null);
@@ -40,7 +42,7 @@ function CitiesContainer({ offers, currentCity }: CitiesContainer): JSX.Element 
           <b className="places__found">{offers.length} place{offers.length === 1 || 's'} to stay in {currentCity}</b>
           <SortMenu current={activeSort} setter={setActiveSort} />
           <div className="cities__places-list places__list tabs__content">
-            <OffersList offers={sortedOffers} handleHover={handleHover} />
+            <OffersList offers={sortedOffers} handleHover={handleHover} isSignedIn={isSignedIn}/>
           </div>
         </section>
         <div className="cities__right-section">

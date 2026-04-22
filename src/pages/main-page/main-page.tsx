@@ -28,7 +28,7 @@ function MainPage({ isSignedIn }: mainPageProps): JSX.Element {
           <LocationsList currentCity={currentCity} onCityClick={(city) => dispatch(changeCity(city))} />
         </div>
         {cityOffers.length > 0
-          ? <CitiesContainer offers={cityOffers} currentCity={currentCity} />
+          ? <CitiesContainer offers={cityOffers} currentCity={currentCity} isSignedIn={isSignedIn}/>
           : <MainEmpty currentCity={currentCity} />}
         {error ? <ErrorMessage error={error} /> : ''}
       </main>

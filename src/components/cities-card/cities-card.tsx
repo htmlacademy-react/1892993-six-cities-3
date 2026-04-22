@@ -1,7 +1,10 @@
 import { mainOfferType } from '../../pages/main-page/main-offer-type';
 import { AppRoute, CitiesCardClass } from '../../consts';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { memo } from 'react';
+import { AuthorizationStatus } from '../../consts';
+import { useAppDispatch, useAppSelector } from '../../hooks';
+import { toggleFavoritesAction } from '../../store/api-actions';
 
 type citiesCardProps = {
   offer: mainOfferType;
@@ -10,10 +13,18 @@ type citiesCardProps = {
   imgWidth?: number;
   imgHeight?: number;
   infoClass?: string;
+  isSignedIn: string;
 }
 
-const CitiesCardComponent = ({ offer, handleHover = () => { }, page = CitiesCardClass.CITIES, imgWidth = 260, imgHeight = 200, infoClass = '' }: citiesCardProps): JSX.Element => {
-  const { price, title, type, isPremium, isFavorite, previewImage, rating } = offer;
+const CitiesCardComponent = ({ offer, handleHover = () => { }, page = CitiesCardClass.CITIES, imgWidth = 260, imgHeight = 200, infoClass = '', isSignedIn }: citiesCardProps): JSX.Element => {
+  const { price, title, type, isPremium, previewImage, rating, id } = offer;
+
+  const isFavorite = useAppSelector((state) =>
+    state.favorites.some((item) => item.id === id),
+  );
+
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
 
   const handleMouseOn = () => {
     handleHover(offer.id);
@@ -21,7 +32,15 @@ const CitiesCardComponent = ({ offer, handleHover = () => { }, page = CitiesCard
   const handleMouseOff = () => {
     handleHover();
   };
-
+  const handleBookmarkClick = () => {
+    if (isSignedIn !== AuthorizationStatus.Auth) {
+      navigate(AppRoute.Login);
+    }
+    dispatch(toggleFavoritesAction({
+      id: id,
+      status: isFavorite ? 0 : 1
+    }));
+  };
 
   return (
     <article className={`${page}__card place-card`} onMouseEnter={handleMouseOn} onMouseLeave={handleMouseOff}>
@@ -49,6 +68,7 @@ const CitiesCardComponent = ({ offer, handleHover = () => { }, page = CitiesCard
           <button
             className={`place-card__bookmark-button  button ${isFavorite && 'place-card__bookmark-button--active'}`}
             type="button"
+            onClick={handleBookmarkClick}
           >
             <svg
               className="place-card__bookmark-icon"

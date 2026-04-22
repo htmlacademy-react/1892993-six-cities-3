@@ -15,7 +15,7 @@ type authData = {
 }
 
 type FavoriteStatusData = {
-  id: string;
+  id: string | undefined;
   status: number;
 }
 
@@ -122,11 +122,9 @@ const fetchFavoritesAction = createAsyncThunk<
 
 const toggleFavoritesAction = createAsyncThunk<currentOfferType, FavoriteStatusData, { extra: AxiosInstance }>(
   'toggleFavorites',
-  async ({status, id}, { dispatch, extra: api }) => {
+  async ({status, id}, {dispatch, extra: api }) => {
     const { data } = await api.post<currentOfferType>(`${APIRoute.Favorite}/${id}/${status}`);
-
     dispatch(fetchFavoritesAction());
-    dispatch(fetchOffersAction());
     return data;
   }
 );

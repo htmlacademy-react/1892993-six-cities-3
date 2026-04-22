@@ -108,10 +108,17 @@ export const Slice = createSlice({
 
       .addCase(toggleFavoritesAction.fulfilled, (state, action) => {
         const updatedOffer = action.payload;
+
         if (state.currentOffer && state.currentOffer.id === updatedOffer.id) {
           state.currentOffer.isFavorite = updatedOffer.isFavorite;
+          state.favorites.push(updatedOffer);
+          const currentOfferIndex = state.offers.findIndex((offer) => offer.id === updatedOffer.id);
+          state.offers[currentOfferIndex].isFavorite = updatedOffer.isFavorite;
+        } else {
+          state.favorites.filter((offer) => offer.id !== updatedOffer.id);
+          const currentOfferIndex = state.offers.findIndex((offer) => offer.id === updatedOffer.id);
+          state.offers[currentOfferIndex].isFavorite = updatedOffer.isFavorite;
         }
-
       });
   },
 });
