@@ -7,12 +7,13 @@ type offersListProps = {
   offers: mainOfferType[];
   page?: string;
   handleHover?: (offer?: string) => void;
+  isSignedIn: string;
 }
 
 
-const OffersListComponent = ({ offers, handleHover, page }: offersListProps): JSX.Element =>(
+const OffersListComponent = ({ offers, handleHover, page, isSignedIn }: offersListProps): JSX.Element =>(
   <>
-    {offers.map((offer) => <CitiesCard handleHover={handleHover} key={offer.id} offer={offer} page={page} />)}
+    {offers.map((offer) => <CitiesCard handleHover={handleHover} key={offer.id} offer={offer} page={page} isSignedIn={isSignedIn}/>)}
   </>
 );
 

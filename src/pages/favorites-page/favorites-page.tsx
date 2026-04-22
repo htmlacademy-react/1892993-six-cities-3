@@ -12,10 +12,11 @@ type favoritePageProps = {
 function FavoritesPage({ isSignedIn }: favoritePageProps): JSX.Element {
   const favorites = useAppSelector((state) => state.favorites);
   const uniqueCities = Array.from(new Set(favorites.map((offer) => offer.city.name)));
-  const emptyMainClass = uniqueCities.length > 0 ? ' page__main--favorites-empty' : '';
+  const emptyMainClass = uniqueCities.length > 0 ? '' : ' page__main--favorites-empty';
+  const emptyPageClass = uniqueCities.length > 0 ? '' : ' page--favorites-empty';
 
   return (
-    <div className="page">
+    <div className={`page${emptyPageClass}`}>
       <Header isSignedIn={isSignedIn} />
       <main className={`page__main page__main--favorites${emptyMainClass}`}>
         <div className="page__favorites-container container">
@@ -34,7 +35,7 @@ function FavoritesPage({ isSignedIn }: favoritePageProps): JSX.Element {
                     </div>
                     <div className="favorites__places">
                       {favorites.map((offer) => (offer.city.name === city ?
-                        <CitiesCard key={offer.id} offer={offer} page={CitiesCardClass.FAVORITES} imgWidth={150} imgHeight={110} infoClass='favorites__card-info' />
+                        <CitiesCard key={offer.id} offer={offer} page={CitiesCardClass.FAVORITES} imgWidth={150} imgHeight={110} infoClass='favorites__card-info' isSignedIn={isSignedIn} />
                         : null))}
                     </div>
                   </li>))}

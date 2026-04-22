@@ -43,6 +43,8 @@ function LoginPage(): JSX.Element {
                 <label className="visually-hidden">Password</label>
                 <input
                   className="login__input form__input"
+                  title="Минимум из одной буквы и цифры"
+                  pattern="(?=.*\d)(?=.*[a-zA-Z]).{2,}"
                   type="password"
                   name="password"
                   placeholder="Password"

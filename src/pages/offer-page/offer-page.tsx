@@ -3,11 +3,11 @@ import OffersList from '../../components/offers-list/offers-list';
 import Map from '../../components/map/map';
 import Form from '../../components/form/form';
 import Reviews from '../../components/reviews/reviews';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { useEffect } from 'react';
 import NotFoundPage from '../not-found-page/not-found-page';
 import { NEAR_PLACES_MAX_LENGTH } from '../../consts';
-import { CitiesCardClass, AuthorizationStatus } from '../../consts';
+import { CitiesCardClass, AuthorizationStatus, AppRoute } from '../../consts';
 import { fetchNearbyOffersAction, fetchCurrentOfferAction, fetchComments, toggleFavoritesAction } from '../../store/api-actions';
 import { useAppDispatch, useAppSelector } from '../../hooks';
 import Spinner from '../../components/spinner/spinner';
@@ -20,6 +20,7 @@ function OfferPage({ isSignedIn }: offerPageProps) {
   const { id: offerId = '' } = useParams();
   const dispatch = useAppDispatch();
   const currentOffer = useAppSelector((state) => state.currentOffer);
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (offerId) {
@@ -58,7 +59,7 @@ function OfferPage({ isSignedIn }: offerPageProps) {
 
   const handleBookmarkClick = () => {
     if (isSignedIn !== AuthorizationStatus.Auth) {
-      return;
+      navigate(AppRoute.Login);
     }
 
     dispatch(toggleFavoritesAction({
@@ -165,7 +166,7 @@ function OfferPage({ isSignedIn }: offerPageProps) {
                   Other places in the neighbourhood
                 </h2>
                 <div className="near-places__list places__list">
-                  <OffersList offers={nearbyOffers} page={CitiesCardClass.NEAR_PLACES} />
+                  <OffersList offers={nearbyOffers} page={CitiesCardClass.NEAR_PLACES} isSignedIn={isSignedIn} />
                 </div>
               </> : ''}
 
