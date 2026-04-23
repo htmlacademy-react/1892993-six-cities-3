@@ -4,6 +4,7 @@ import dayjs from 'dayjs';
 
 
 type reviewsProps = { comments: commentType[] };
+
 function Reviews({ comments }: reviewsProps) {
   const sortedSlicedComments = comments.toSorted((comment1,comment2)=>dayjs(comment2.date).diff(dayjs(comment1.date))).slice(0,10);
   return (
