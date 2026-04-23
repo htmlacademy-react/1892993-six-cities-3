@@ -1,7 +1,7 @@
 import { configureStore } from '@reduxjs/toolkit';
 import { Slice } from './slice';
 
-import createAPI from '../services/api';
+import { createAPI } from '../services/api';
 const api = createAPI();
 
 export const store = configureStore({
